@@ -1,5 +1,6 @@
 #include "SQLibTest.h"
 #include <variant>
+#include <typeinfo>
 
 namespace test {
 
@@ -138,6 +139,45 @@ namespace test {
 			{
 				EXPECT_EQ(3, column.size());
 			}
+		}
+	}
+	TEST_F(SQLibTest, TypeConversionTest)
+	{
+		ASSERT_FALSE(db_);
+		ASSERT_NO_THROW(db_ = sql::CreateSQLiteDB("./test.db"));
+		ASSERT_TRUE(db_);
+		// Execute drop test table.
+		ASSERT_TRUE(db_->ExecuteString(R"SQL(DROP TABLE IF EXISTS test;)SQL"));
+		// Execute create table test.
+		ASSERT_TRUE(db_->ExecuteString(R"SQL(
+			-- Create a new table test that include name and age of people.
+			CREATE TABLE test (
+				-- Created a primary key as an int autoincrement ascendant.
+				id INTEGER PRIMARY KEY ASC AUTOINCREMENT,
+				-- Name is a varchar.
+				name VARCHAR(20),
+				-- Family name is also a varchar.
+				family VARCHAR(20),
+				-- Age is an integer.
+				age INTEGER DEFAULT 0,
+                -- Currency is an integer
+                currency INTEGER DEFAULT 0.0
+			);
+		)SQL"));
+		ASSERT_TRUE(db_->ExecuteString(R"SQL(
+			INSERT INTO test (name, family, age, currency) VALUES
+				("Bernard", "Kevin", 24, 10.5),
+				("Roger", NULL, 12, 21.5);
+		)SQL"));
+		{
+			EXPECT_TRUE(db_->ExecuteString(R"SQL(
+				SELECT * FROM test;
+			)SQL"));
+			auto table = db_->GetReturnValues();
+			EXPECT_EQ(typeid(std::string), typeid(std::get<1>(table[0][1])));
+			EXPECT_EQ(typeid(int64_t), typeid(std::get<1>(table[0][2])));
+			EXPECT_EQ(typeid(double), typeid(std::get<1>(table[0][3])));
+			EXPECT_EQ(typeid(nullptr), typeid(std::get<1>(table[1][2])));
 		}
 	}
 

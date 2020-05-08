@@ -14,7 +14,8 @@ namespace sql {
 		row_t newRow;
 		int i;
         for( i = 0; i < ac; i++) {
-			newRow.push_back(std::pair<std::string, value_t>(column_name[i], av[i]));
+			std::string value = av[i];
+			newRow.push_back(std::pair<std::string, value_t>(column_name[i], value));
         }
 		myDb->table_.push_back(newRow);
 		return 0;
@@ -52,7 +53,13 @@ namespace sql {
 
 	sql::value_t SQLiteImpl::GetValue(const std::string& str) const
 	{
-#pragma message ("You have to complete this code!")
+		if (str.empty())
+			return nullptr;
+		else if (str.find_first_not_of("0123456789") == std::string::npos)
+			return _atoi64(str.c_str());
+		else if (!str.empty() && str.find_first_not_of("0123456789.,") == std::string::npos)
+		    return std::stof(str);
+
 		return str;
 	}
 
