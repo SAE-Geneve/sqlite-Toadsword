@@ -15,8 +15,12 @@ namespace sql {
 		int i;
         for( i = 0; i < ac; i++) {
 			char* value = av[i];
-			newRow.push_back(std::pair<std::string, value_t>(column_name[i], myDb->GetValue(value)));
-        }
+            if(value != nullptr) {
+			    newRow.push_back(std::pair<std::string, value_t>(column_name[i], myDb->GetValue(value)));
+            } else {
+				newRow.push_back(std::pair<std::string, value_t>(column_name[i], nullptr));
+            }
+        } 
 		myDb->table_.push_back(newRow);
 		return 0;
 	}
