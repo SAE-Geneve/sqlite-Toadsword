@@ -13,8 +13,8 @@ namespace sql {
 		std::string, 
 		std::nullptr_t>;
 	using name_value_t = std::pair<std::string, value_t>;
-	using column_t = std::vector<name_value_t>;
-	using table_t = std::vector<column_t>;
+	using row_t = std::vector<name_value_t>;
+	using table_t = std::vector<row_t>;
 
 	class SQLib 
 	{
