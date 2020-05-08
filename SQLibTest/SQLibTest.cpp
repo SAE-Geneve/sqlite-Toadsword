@@ -177,7 +177,7 @@ namespace test {
 			EXPECT_EQ(typeid(std::string), typeid(std::get<1>(table[0][1])));
 			EXPECT_EQ(typeid(int64_t), typeid(std::get<1>(table[0][2])));
 			EXPECT_EQ(typeid(double), typeid(std::get<1>(table[0][3])));
-			EXPECT_EQ(typeid(nullptr), typeid(std::get<1>(table[1][2])));
+			EXPECT_EQ(typeid(nullptr), typeid(std::get<1>(table[1][1])));
 		}
 	}
 

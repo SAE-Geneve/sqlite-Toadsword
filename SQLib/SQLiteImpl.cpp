@@ -14,8 +14,8 @@ namespace sql {
 		row_t newRow;
 		int i;
         for( i = 0; i < ac; i++) {
-			std::string value = av[i];
-			newRow.push_back(std::pair<std::string, value_t>(column_name[i], value));
+			char* value = av[i];
+			newRow.push_back(std::pair<std::string, value_t>(column_name[i], myDb->GetValue(value)));
         }
 		myDb->table_.push_back(newRow);
 		return 0;
