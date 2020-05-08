@@ -49,6 +49,7 @@ namespace sql {
         if(res != SQLITE_OK) {
 			fprintf(stderr, "SQL error : %s\n", errorMsg);
 			error_ = errorMsg;
+			sqlite3_free(errorMsg);
 			return false;
         }
 		
